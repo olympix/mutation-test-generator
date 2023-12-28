@@ -1,0 +1,16 @@
+name: "Olympix Unit Test Generator"
+description: "Perform code analysis in Solidity projects to generate unit tests automatically"
+branding:
+  icon: 'x'
+  color: 'purple'
+inputs:
+  args:
+    description: "Arguments to customize unit test generator"
+runs:
+  using: "docker"
+  image: "docker://olympix/integrated-security:latest"
+  env:
+    OLYMPIX_INTEGRATION_ORIGIN: "gha"
+  args:
+  - generate-unit-test
+  - ${{ inputs.args }}
