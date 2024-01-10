@@ -12,5 +12,5 @@ runs:
   env:
     OLYMPIX_INTEGRATION_ORIGIN: "gha"
   args:
-  - generate-unit-test
+  - generate-unit-tests
   - ${{ inputs.args }}
