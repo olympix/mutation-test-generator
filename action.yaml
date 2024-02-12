@@ -6,6 +6,7 @@ branding:
 inputs:
   args:
     description: "Arguments to customize unit test generator"
+    default: --confirm-all
 runs:
   using: "docker"
   image: "docker://olympix/integrated-security:latest"
