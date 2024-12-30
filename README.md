@@ -1,4 +1,4 @@
-# Olympix Tests Generation
+# Olympix Mutaion Tests Generation
 
 ## Overview
 
@@ -12,59 +12,22 @@ The Olympix Test Generation action enables Olympix's test generator tool to be i
 ## Getting Started
 
 1. Add a GitHub repository secret with your Olympix API token and set an environment variable on GitHub Workflow named `OLYMPIX_API_TOKEN` with the secret you just added
-2. Add the `olympix/test-generator` GitHub Action into your workflow
-
-***Add the following steps if you want to add the generated tests directly to your repository**
-
-4. Create a GitHub [`personal access token`](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens), add a GitHub repository secret with the personal access token you created and set an environment variable on GitHub Workflow named `OLYMPIX_GITHUB_ACCESS_TOKEN` with the secret you just added
-5. Create a branch named `opix-unit-test` where the tests will be commited
+2. Add the `olympix/mutation-test-generator` GitHub Action into your workflow
 
 ## Usage
 
-Here's a workflow example that utilizes the Olympix Tests Generation Action. In this scenario, the process to generate the tests will be triggered every time a merge from `main` branch happens to the `opix-unit-test` branch:
+Here is an example workflow which triggers on each commit that contains the string `OPIX-GEN-MUTATION-TESTS` and runs `forge install` and `npm install` before triggering the mutation test generator. 
+Note that we need to include `-p path/to/Contract.sol` for each contract in the args passed to the test generator.
 
 ```shell
-name: Unit Test Generation Workflow
-on:
-  pull_request:
-    types:
-      - closed
-      
-jobs:
-  test-generation:
-    if: github.event.pull_request.merged == true && github.head_ref == 'main' && github.base_ref == 'opix-unit-test'
-    
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.17.1
-
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Unit Test Generator
-        uses: olympix/test-generator@main
-        env:
-          OLYMPIX_API_TOKEN: ${{ secrets.OLYMPIX_API_TOKEN }}
-          OLYMPIX_GITHUB_ACCESS_TOKEN: ${{ secrets.OLYMPIX_GITHUB_TOKEN }}
-```
-
-This is another example which triggers the workflow on each commit that contains the string `OPIX-GEN-UNIT-TESTS` and runs `forge install` and `npm install` before triggering the test generator
-
-```shell
-name: Unit Test Generation Workflow
+name: Mutation Test Generation Workflow
 on:
   push
 
 jobs:
-  test-generation:
+  mutation-test-generation:
     
-    if: contains(github.event.head_commit.message, 'OPIX-GEN-UNIT-TEST')
+    if: contains(github.event.head_commit.message, 'OPIX-GEN-MUTATION-TESTS')
     runs-on: ubuntu-latest
     
     steps:
@@ -84,11 +47,12 @@ jobs:
           forge install
 
 
-      - name: Unit Test Generator
-        uses: olympix/test-generator@main
+      - name: Mutation Test Generator
+        uses: olympix/mutation-test-generator@main
         env:
           OLYMPIX_API_TOKEN: ${{ secrets.OLYMPIX_API_TOKEN }}
           OLYMPIX_GITHUB_ACCESS_TOKEN: ${{ secrets.OLYMPIX_GITHUB_TOKEN }}
+        args: -p src/subjectContract1.sol -p src/subjectContract2.sol
 ```
 
 

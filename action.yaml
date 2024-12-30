@@ -1,5 +1,5 @@
-name: "Olympix Unit Test Generator"
-description: "Perform code analysis in Solidity projects to generate unit tests automatically"
+name: "Olympix Mutation Test Generator"
+description: "Perform code analysis in Solidity projects to generate mutation tests"
 branding:
   icon: 'x'
   color: 'purple'
@@ -13,5 +13,5 @@ runs:
   env:
     OLYMPIX_INTEGRATION_ORIGIN: "gha"
   args:
-  - generate-unit-tests
+  - generate-mutation-tests
   - ${{ inputs.args }}
