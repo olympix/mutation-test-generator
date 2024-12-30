@@ -7,7 +7,7 @@ The Olympix Test Generation action enables Olympix's test generator tool to be i
 
 ## Features
 
-- **Unit Tests Generation:** Automates the creation of unit tests ensuring the correctness and reliability of your code
+- **Mutation Tests Generation:** Automates the creation of unit tests ensuring the correctness and reliability of your code
 
 ## Getting Started
 
