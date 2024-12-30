@@ -56,7 +56,7 @@ jobs:
 
 This is another example which triggers the workflow on each commit that contains the string `OPIX-GEN-UNIT-TESTS` and runs `forge install` and `npm install` before triggering the test generator
 
-```
+```shell
 name: Unit Test Generation Workflow
 on:
   push
