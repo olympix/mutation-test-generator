@@ -12,8 +12,7 @@ The Olympix Test Generation action enables Olympix's test generator tool to be i
 ## Getting Started
 
 1. Add a GitHub repository secret with your Olympix API token and set an environment variable on GitHub Workflow named `OLYMPIX_API_TOKEN` with the secret you just added
-2. Add the file `opix.config.json` to the root project providing info for the tests generation
-3. Add the `olympix/test-generator` GitHub Action into your workflow
+2. Add the `olympix/test-generator` GitHub Action into your workflow
 
 ***Add the following steps if you want to add the generated tests directly to your repository**
 
@@ -55,33 +54,45 @@ jobs:
           OLYMPIX_GITHUB_ACCESS_TOKEN: ${{ secrets.OLYMPIX_GITHUB_TOKEN }}
 ```
 
-Here's an example of `opix.config.json` file that sets two contracts to have tests generated (currently we support up to 5 contracts at a time):
+This is another example which triggers the workflow on each commit that contains the string `OPIX-GEN-UNIT-TESTS` and runs `forge install` and `npm install` before triggering the test generator
 
-```json
-{
-    "recipientEmail": "example@olympix.ai",
-    "coverageArgs": [],
-    "testArgs": [],
-    "buildArgs": [],
-    "opixTestDir": "test",
-    "testContracts": [
-      {
-        "subjectContractName": "SampleCoin",
-        "subjectContractPath": "contracts/SampleCoin.sol",
-        "testContractPath": "test/SampleCoin.t.sol",
-        "testContractName": "SampleCoinTest"
-      },
-      {
-        "subjectContractName": "ExampleContract",
-        "subjectContractPath": "contracts/ExampleContract.sol",
-        "testContractPath": "test/ExampleContract.t.sol",
-        "testContractName": "ExampleContractTest"
-      }
-    ]
-}
+```
+name: Unit Test Generation Workflow
+on:
+  push
+
+jobs:
+  test-generation:
+    
+    if: contains(github.event.head_commit.message, 'OPIX-GEN-UNIT-TEST')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+          submodules: recursive
+
+
+      - name: Install dependencies
+        run: npm install
+     
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run forge install 
+        run: |
+          forge install
+
+
+      - name: Unit Test Generator
+        uses: olympix/test-generator@main
+        env:
+          OLYMPIX_API_TOKEN: ${{ secrets.OLYMPIX_API_TOKEN }}
+          OLYMPIX_GITHUB_ACCESS_TOKEN: ${{ secrets.OLYMPIX_GITHUB_TOKEN }}
 ```
 
-The workflow will start and an email will be sent to the address set on `opix.config.json` with the result attached. If it is set to integrate with GitHub repository, it will commit the generated tests to the `opix-unit-test` branch and it will open a pull request to the `main` branch with the added tests. The generation time varies based on the size and complexity of the contracts
+
+The workflow will start and an email will be sent to the address related to the api token with the result attached. The generation time varies based on the size and complexity of the contracts
 
 ![unit_test_generation_successfully](https://github.com/olympix/test-generator/blob/main/img/test_generation_workflow.png)
 
