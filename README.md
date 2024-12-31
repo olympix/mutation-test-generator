@@ -1,4 +1,4 @@
-# Olympix Mutaion Test Generation
+# Olympix Mutation Test Generation
 
 ## Overview
 
