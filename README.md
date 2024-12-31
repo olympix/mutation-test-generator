@@ -52,7 +52,8 @@ jobs:
         env:
           OLYMPIX_API_TOKEN: ${{ secrets.OLYMPIX_API_TOKEN }}
           OLYMPIX_GITHUB_ACCESS_TOKEN: ${{ secrets.OLYMPIX_GITHUB_TOKEN }}
-        args: -p src/subjectContract1.sol -p src/subjectContract2.sol
+        with:
+          args: -p src/subjectContract1.sol -p src/subjectContract2.sol
 ```
 
 
